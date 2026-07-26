@@ -115,18 +115,6 @@ Hospital-Management-System/
     ├── Activity_Diagram.png # Activity Diagram
     └── Flowchart.png       # System Flowchart
 ```
-
-## Screenshots
-
-> Add screenshots in the `screenshots/` folder and reference them here.
-
-| Page | Screenshot |
-|------|------------|
-| Login | `screenshots/login.png` |
-| Admin Dashboard | `screenshots/admin_dashboard.png` |
-| Doctor Dashboard | `screenshots/doctor_dashboard.png` |
-| Receptionist Dashboard | `screenshots/receptionist_dashboard.png` |
-
 ## Installation Guide
 
 ### Prerequisites
@@ -173,8 +161,8 @@ SOURCE database/sample_data.sql;
 # 7. Run the Flask server
 python app.py
 ```
-
-The application will start at `http://127.0.0.1:5000`.
+##LIVE DEMO
+https://hospital-management-system-1-nuah.onrender.com
 
 ## Default Login Credentials
 

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Patient: {{ patient.first_name }} {{ patient.last_name }} - HMS{% endblock %}
+{% block page_title %}Patient Details{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Patient Info -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-person-circle text-primary" style="font-size: 4rem;"></i>
+                </div>
+                <h4>{{ patient.first_name }} {{ patient.last_name }}</h4>
+                <p class="text-muted">Patient #{{ patient.id }}</p>
+            </div>
+            <div class="card-body border-top">
+                <table class="table table-borderless mb-0">
+                    <tr><td class="text-muted">Gender</td><td>{{ patient.gender }}</td></tr>
+                    <tr><td class="text-muted">DOB</td><td>{{ patient.date_of_birth }}</td></tr>
+                    <tr><td class="text-muted">Phone</td><td>{{ patient.phone }}</td></tr>
+                    <tr><td class="text-muted">Email</td><td>{{ patient.email or '-' }}</td></tr>
+                    <tr><td class="text-muted">Blood Group</td><td>{{ patient.blood_group or '-' }}</td></tr>
+                    <tr><td class="text-muted">Allergies</td><td>{{ patient.allergies or 'None' }}</td></tr>
+                    <tr><td class="text-muted">Doctor</td><td>{{ patient.doctor_name or 'Not Assigned' }}</td></tr>
+                </table>
+            </div>
+            <div class="card-footer bg-white">
+                <a href="{{ url_for('patient.edit_patient', patient_id=patient.id) }}" class="btn btn-primary btn-sm w-100">
+                    <i class="bi bi-pencil me-1"></i> Edit Details
+                </a>
+            </div>
+        </div>
+
+        {% if patient.medical_history %}
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-white"><h6 class="mb-0">Medical History</h6></div>
+            <div class="card-body">
+                <p class="mb-0">{{ patient.medical_history }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Tabs: Appointments, Prescriptions, Bills -->
+    <div class="col-lg-8">
+        <ul class="nav nav-tabs" id="patientTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#appointments">
+                    <i class="bi bi-calendar3 me-1"></i> Appointments ({{ appointments|length }})
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#prescriptions">
+                    <i class="bi bi-journal-medical me-1"></i> Prescriptions ({{ prescriptions|length }})
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#bills">
+                    <i class="bi bi-receipt me-1"></i> Bills ({{ bills|length }})
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content p-3">
+            <!-- Appointments Tab -->
+            <div class="tab-pane fade show active" id="appointments">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr><th>Date</th><th>Time</th><th>Doctor</th><th>Reason</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for apt in appointments %}
+                            <tr>
+                                <td>{{ apt.appointment_date }}</td>
+                                <td>{{ apt.appointment_time }}</td>
+                                <td>{{ apt.doctor_name }}</td>
+                                <td>{{ apt.reason or '-' }}</td>
+                                <td>
+                                    {% if apt.status == 'Scheduled' %}
+                                    <span class="badge bg-info">Scheduled</span>
+                                    {% elif apt.status == 'Completed' %}
+                                    <span class="badge bg-success">Completed</span>
+                                    {% elif apt.status == 'Cancelled' %}
+                                    <span class="badge bg-danger">Cancelled</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">No-Show</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if not appointments %}
+                            <tr><td colspan="5" class="text-center text-muted">No appointments</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Prescriptions Tab -->
+            <div class="tab-pane fade" id="prescriptions">
+                {% for pr in prescriptions %}
+                <div class="card mb-3 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="text-primary">{{ pr.diagnosis }}</h6>
+                            <small class="text-muted">{{ pr.prescribed_date.strftime('%d %b %Y') if pr.prescribed_date else '-' }}</small>
+                        </div>
+                        <p class="mb-1"><strong>Prescription:</strong> {{ pr.prescription_text }}</p>
+                        {% if pr.medicine_details %}
+                        <p class="mb-1"><strong>Medicines:</strong><br>{{ pr.medicine_details|replace('\\n', '<br>')|safe }}</p>
+                        {% endif %}
+                        {% if pr.notes %}
+                        <p class="text-muted mb-0"><small>Notes: {{ pr.notes }}</small></p>
+                        {% endif %}
+                        <small class="text-muted">Dr. {{ pr.doctor_name }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if not prescriptions %}
+                <p class="text-center text-muted">No prescriptions yet</p>
+                {% endif %}
+            </div>
+
+            <!-- Bills Tab -->
+            <div class="tab-pane fade" id="bills">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr><th>Date</th><th>Consultation</th><th>Medicine</th><th>Lab</th><th>Other</th><th>Total</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for bill in bills %}
+                            <tr>
+                                <td>{{ bill.bill_date.strftime('%d %b %Y') if bill.bill_date else '-' }}</td>
+                                <td>&#8377;{{ "%.2f"|format(bill.consultation_fee|float) }}</td>
+                                <td>&#8377;{{ "%.2f"|format(bill.medicine_charges|float) }}</td>
+                                <td>&#8377;{{ "%.2f"|format(bill.lab_charges|float) }}</td>
+                                <td>&#8377;{{ "%.2f"|format(bill.other_charges|float) }}</td>
+                                <td><strong>&#8377;{{ "%.2f"|format(bill.total_amount|float) }}</strong></td>
+                                <td>
+                                    {% if bill.payment_status == 'Paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                    {% elif bill.payment_status == 'Partial' %}
+                                    <span class="badge bg-warning">Partial</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Unpaid</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if not bills %}
+                            <tr><td colspan="7" class="text-center text-muted">No bills</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

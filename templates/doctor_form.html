@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if doctor else 'Add' }} Doctor - HMS{% endblock %}
+{% block page_title %}{{ 'Edit' if doctor else 'Add New' }} Doctor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-badge me-2"></i>
+                    {{ 'Edit Doctor Details' if doctor else 'Register New Doctor' }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="row g-3">
+                        {% if not doctor %}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Username *</label>
+                            <input type="text" class="form-control" name="username" value="{{ data.get('username', '') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Password *</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Full Name *</label>
+                            <input type="text" class="form-control" name="full_name" value="{{ data.get('full_name', '') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{ data.get('email', '') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Phone</label>
+                            <input type="text" class="form-control" name="phone" value="{{ data.get('phone', '') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Specialization *</label>
+                            <input type="text" class="form-control" name="specialization" value="{{ data.get('specialization', '') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Qualification</label>
+                            <input type="text" class="form-control" name="qualification" value="{{ data.get('qualification', '') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Experience (yrs)</label>
+                            <input type="number" class="form-control" name="experience_years" value="{{ data.get('experience_years', 0) }}" min="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Consultation Fee</label>
+                            <input type="number" class="form-control" name="consultation_fee" value="{{ data.get('consultation_fee', 500) }}" min="0" step="50">
+                        </div>
+                        {% if doctor %}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Availability</label>
+                            <select class="form-select" name="availability">
+                                <option value="Available" {% if data.get('availability') == 'Available' %}selected{% endif %}>Available</option>
+                                <option value="On Leave" {% if data.get('availability') == 'On Leave' %}selected{% endif %}>On Leave</option>
+                                <option value="Unavailable" {% if data.get('availability') == 'Unavailable' %}selected{% endif %}>Unavailable</option>
+                            </select>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> {{ 'Update' if doctor else 'Add' }} Doctor
+                        </button>
+                        <a href="{{ url_for('admin.doctors') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

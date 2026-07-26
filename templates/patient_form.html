@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if patient else 'Register' }} Patient - HMS{% endblock %}
+{% block page_title %}{{ 'Edit Patient Details' if patient else 'Register New Patient' }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-plus me-2"></i>
+                    {{ 'Edit Patient Details' if patient else 'Register New Patient' }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <h6 class="text-primary mb-3">Personal Information</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ data.get('first_name', '') }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ data.get('last_name', '') }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Date of Birth *</label>
+                            <input type="date" class="form-control" name="date_of_birth" value="{{ data.get('date_of_birth', '') }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Gender *</label>
+                            <select class="form-select" name="gender" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="Male" {% if data.get('gender') == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if data.get('gender') == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if data.get('gender') == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Phone *</label>
+                            <input type="text" class="form-control" name="phone" value="{{ data.get('phone', '') }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{ data.get('email', '') }}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Address</label>
+                            <textarea class="form-control" name="address" rows="2">{{ data.get('address', '') }}</textarea>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    <h6 class="text-primary mb-3">Medical Information</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Blood Group</label>
+                            <select class="form-select" name="blood_group">
+                                <option value="" selected disabled>Select</option>
+                                {% for bg in ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
+                                <option value="{{ bg }}" {% if data.get('blood_group') == bg %}selected{% endif %}>{{ bg }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Assigned Doctor</label>
+                            <select class="form-select" name="assigned_doctor_id">
+                                <option value="" selected disabled>Select Doctor</option>
+                                {% for doc in doctors %}
+                                <option value="{{ doc.id }}" {% if data.get('assigned_doctor_id') == doc.id or data.get('assigned_doctor_id')|string == doc.id|string %}selected{% endif %}>{{ doc.full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Allergies</label>
+                            <input type="text" class="form-control" name="allergies" value="{{ data.get('allergies', '') }}" placeholder="e.g., Penicillin">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Medical History</label>
+                            <textarea class="form-control" name="medical_history" rows="3" placeholder="Any past illnesses, surgeries, ongoing conditions...">{{ data.get('medical_history', '') }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> {{ 'Update' if patient else 'Register' }} Patient
+                        </button>
+                        <a href="{{ url_for('patient.list_patients') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

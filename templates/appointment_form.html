@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if appointment else 'Book' }} Appointment - HMS{% endblock %}
+{% block page_title %}{{ 'Reschedule' if appointment else 'Book New' }} Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-calendar-plus me-2"></i>
+                    {{ 'Reschedule Appointment' if appointment else 'Book New Appointment' }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Patient *</label>
+                            <select class="form-select" name="patient_id" required>
+                                <option value="" selected disabled>Select Patient</option>
+                                {% for p in patients %}
+                                <option value="{{ p.id }}" {% if data.get('patient_id')|int == p.id %}selected{% endif %}>
+                                    {{ p.first_name }} {{ p.last_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Doctor *</label>
+                            <select class="form-select" name="doctor_id" required>
+                                <option value="" selected disabled>Select Doctor</option>
+                                {% for d in doctors %}
+                                <option value="{{ d.id }}" {% if data.get('doctor_id')|int == d.id %}selected{% endif %}>
+                                    {{ d.full_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Date *</label>
+                            <input type="date" class="form-control" name="appointment_date"
+                                   value="{{ data.get('appointment_date', '') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Time *</label>
+                            <input type="time" class="form-control" name="appointment_time"
+                                   value="{{ data.get('appointment_time', '') }}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Reason</label>
+                            <textarea class="form-control" name="reason" rows="2" placeholder="Reason for visit">{{ data.get('reason', '') }}</textarea>
+                        </div>
+                        {% if appointment %}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="Scheduled" {% if data.get('status') == 'Scheduled' %}selected{% endif %}>Scheduled</option>
+                                <option value="Completed" {% if data.get('status') == 'Completed' %}selected{% endif %}>Completed</option>
+                                <option value="Cancelled" {% if data.get('status') == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                <option value="No-Show" {% if data.get('status') == 'No-Show' %}selected{% endif %}>No-Show</option>
+                            </select>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> {{ 'Update' if appointment else 'Book' }} Appointment
+                        </button>
+                        <a href="{{ url_for('appointment.list_appointments') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

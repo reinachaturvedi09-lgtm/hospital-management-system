@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice #{{ bill.id }} - HMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { font-size: 12px; }
+        }
+        .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #ccc; }
+        .invoice-header { border-bottom: 2px solid #0d6efd; padding-bottom: 20px; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="no-print py-3 text-center">
+        <button onclick="window.print()" class="btn btn-primary me-2">
+            <i class="bi bi-printer me-1"></i> Print Invoice
+        </button>
+        <button onclick="window.close()" class="btn btn-outline-secondary">Close</button>
+    </div>
+
+    <div class="invoice-box bg-white">
+        <div class="invoice-header d-flex justify-content-between align-items-start">
+            <div>
+                <h3 class="text-primary mb-1"><i class="bi bi-hospital me-2"></i>Hospital Management System</h3>
+                <p class="text-muted mb-0">123 Medical Center Road, City - 560001</p>
+                <p class="text-muted mb-0">Phone: +91 98765 43210 | Email: info@hms.com</p>
+            </div>
+            <div class="text-end">
+                <h4 class="text-primary">INVOICE</h4>
+                <p class="mb-1"><strong>Bill #:</strong> {{ bill.id }}</p>
+                <p class="mb-1"><strong>Date:</strong> {{ bill.bill_date.strftime('%d %b %Y') if bill.bill_date else '-' }}</p>
+                <p class="mb-0">
+                    <strong>Status:</strong>
+                    {% if bill.payment_status == 'Paid' %}
+                    <span class="badge bg-success">PAID</span>
+                    {% elif bill.payment_status == 'Partial' %}
+                    <span class="badge bg-warning">PARTIAL</span>
+                    {% else %}
+                    <span class="badge bg-danger">UNPAID</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-md-6">
+                <h6 class="text-muted">Patient Details</h6>
+                <p class="mb-1"><strong>{{ bill.first_name }} {{ bill.last_name }}</strong></p>
+                <p class="mb-1">Gender: {{ bill.gender }}</p>
+                <p class="mb-1">DOB: {{ bill.date_of_birth }}</p>
+                <p class="mb-1">Phone: {{ bill.phone }}</p>
+                <p class="mb-0">Address: {{ bill.address or '-' }}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <h6 class="text-muted">Appointment Details</h6>
+                {% if appointment %}
+                <p class="mb-1"><strong>Doctor:</strong> {{ appointment.doctor_name }}</p>
+                <p class="mb-1"><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+                <p class="mb-1"><strong>Time:</strong> {{ appointment.appointment_time }}</p>
+                <p class="mb-0"><strong>Reason:</strong> {{ appointment.reason or '-' }}</p>
+                {% else %}
+                <p class="text-muted">No appointment linked</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Description</th>
+                        <th class="text-end">Amount (&#8377;)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Consultation Fee</td>
+                        <td class="text-end">{{ "%.2f"|format(bill.consultation_fee|float) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Medicine Charges</td>
+                        <td class="text-end">{{ "%.2f"|format(bill.medicine_charges|float) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Lab Charges</td>
+                        <td class="text-end">{{ "%.2f"|format(bill.lab_charges|float) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Other Charges</td>
+                        <td class="text-end">{{ "%.2f"|format(bill.other_charges|float) }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-primary">
+                        <th>Total Amount</th>
+                        <th class="text-end">&#8377;{{ "%.2f"|format(bill.total_amount|float) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h6 class="text-muted">Payment Information</h6>
+                <p class="mb-1">Method: {{ bill.payment_method }}</p>
+                <p class="mb-0">Status: {{ bill.payment_status }}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-muted mb-0">Thank you for choosing our hospital.</p>
+                <p class="text-muted mb-0">Get well soon!</p>
+            </div>
+        </div>
+
+        <hr>
+        <p class="text-center text-muted mb-0">
+            <small>This is a computer-generated invoice. For queries, contact: info@hms.com</small>
+        </p>
+    </div>
+</body>
+</html>

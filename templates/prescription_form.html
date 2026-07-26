@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Add Prescription - HMS{% endblock %}
+{% block page_title %}Add Prescription{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-journal-medical me-2"></i>
+                    Add Prescription
+                </h5>
+                <small class="text-muted">
+                    Patient: <strong>{{ appointment.first_name }} {{ appointment.last_name }}</strong> |
+                    Date: <strong>{{ appointment.appointment_date }}</strong>
+                </small>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Diagnosis *</label>
+                            <textarea class="form-control" name="diagnosis" rows="2" required
+                                      placeholder="Enter diagnosis (e.g., Common cold, Hypertension)">{{ data.get('diagnosis', '') }}</textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Prescription *</label>
+                            <textarea class="form-control" name="prescription_text" rows="3" required
+                                      placeholder="Treatment instructions and advice">{{ data.get('prescription_text', '') }}</textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Medicine Details</label>
+                            <textarea class="form-control" name="medicine_details" rows="4"
+                                      placeholder="Medicine name - dosage - frequency&#10;e.g., Paracetamol 500mg - 1 tablet three times daily">{{ data.get('medicine_details', '') }}</textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Additional Notes</label>
+                            <textarea class="form-control" name="notes" rows="2"
+                                      placeholder="Any follow-up instructions or precautions">{{ data.get('notes', '') }}</textarea>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> Save Prescription
+                        </button>
+                        <a href="{{ url_for('doctor.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

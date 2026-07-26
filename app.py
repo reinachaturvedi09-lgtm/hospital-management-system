@@ -12,6 +12,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    from models.db import init_sqlite_db
+    init_sqlite_db()
+
     from routes import register_blueprints
     register_blueprints(app)
 

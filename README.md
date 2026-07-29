@@ -161,8 +161,19 @@ SOURCE database/sample_data.sql;
 # 7. Run the Flask server
 python app.py
 ```
-##LIVE DEMO
-https://hospital-management-system-1-nuah.onrender.com
+##Screenshots
+###Login Page
+<img width="1743" height="852" alt="login page hms" src="https://github.com/user-attachments/assets/c5079735-365d-4aa2-959a-f18d9a733f54" />
+ 
+    
+###Admin Dashboard
+<img width="1070" height="1008" alt="Gemini_Generated_Image_uyutu7uyutu7uyut" src="https://github.com/user-attachments/assets/38ed6563-6555-4d1a-a2d0-1180c48370fb" />
+
+###Doctor Management and Patient Management Page
+<img width="1070" height="1008" alt="Gemini_Generated_Image_gncffxgncffxgncf" src="https://github.com/user-attachments/assets/b90df3a6-541a-4fb4-9134-349c8dec47b0" />
+
+###Appointment Management Page and the Billing Module
+<img width="1070" height="1008" alt="Gemini_Generated_Image_v4f4lfv4f4lfv4f4" src="https://github.com/user-attachments/assets/3432b4b0-fde6-46c6-90b7-bca252b3833a" />
 
 ## Default Login Credentials
 

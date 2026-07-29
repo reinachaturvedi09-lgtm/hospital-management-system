@@ -162,6 +162,7 @@ SOURCE database/sample_data.sql;
 python app.py
 ```
 ##Screenshots
+
 ###Login Page
 <img width="1743" height="852" alt="login page hms" src="https://github.com/user-attachments/assets/c5079735-365d-4aa2-959a-f18d9a733f54" />
  
